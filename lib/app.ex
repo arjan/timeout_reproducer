@@ -12,6 +12,7 @@ defmodule TimeoutReproducer.App do
         database: "assetmap",
         timeout: @timeout,
         pool: DBConnection.Poolboy,
+        pool_size: 100,
         name: TestPool
       ]}
     ]
