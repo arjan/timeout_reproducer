@@ -21,6 +21,6 @@ Function: #Function<1.76782678/0 in TimeoutReproducer.App.test/0>
 
 ```
 docker run --name db -e POSTGRES_USER=assetmap -e POSTGRES_PASSWORD=assetmap -e POSTGRES_DATABASE=assetmap -d --net=host postgres:10
-docker run --net=host -it jtrantin/timeout_reproducer
+docker run --net=host -it coffei/timeout_reproducer
 iex> TimeoutReproducer.App.test
 ```
