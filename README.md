@@ -2,7 +2,13 @@
 
 Reproducer for https://github.com/elixir-ecto/db_connection/issues/127
 
-Start with `iex -S mix` and execute `TimeoutReproducer.App.test`, the following error should start to appear.
+Start with:
+```
+iex -pa '_build/dev/lib/*/ebin' --app timeout_reproducer
+```
+
+The following error should start to appear after a while:
+
 ```
 08:51:09.028 [error] Task #PID<0.276.0> started from #PID<0.184.0> terminating
 ** (stop) exited in: :gen_server.call(#PID<0.180.0>, {:checkout, #Reference<0.250900131.883949572.240280>, true, 5000}, 5000)
