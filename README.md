@@ -18,3 +18,9 @@ Start with `iex -S mix` and execute `TimeoutReproducer.App.test`, the following 
 Function: #Function<1.76782678/0 in TimeoutReproducer.App.test/0>
     Args: []
 ```
+
+```
+docker run --name db -e POSTGRES_USER=assetmap -e POSTGRES_PASSWORD=assetmap -e POSTGRES_DATABASE=assetmap -d --net=host postgres:10
+docker run --net=host -it jtrantin/timeout_reproducer
+iex> TimeoutReproducer.App.test
+```
