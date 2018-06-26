@@ -1,7 +1,10 @@
 defmodule TimeoutReproducer.App do
   use Application
 
-  @timeout 500
+  @timeout 5000
+  @sleep 0.1
+  @pool 100
+  @n 400
 
   def start(_, _) do
     children = [
@@ -12,7 +15,7 @@ defmodule TimeoutReproducer.App do
           database: "arjan",
           timeout: @timeout,
           pool: DBConnection.Poolboy,
-          pool_size: 50,
+          pool_size: @pool,
           name: TestPool
         ]}
     ]
@@ -28,13 +31,15 @@ defmodule TimeoutReproducer.App do
 
   def test_loop do
     test()
-    Process.sleep 2000
+    Process.sleep @timeout
     test_loop()
   end
 
   def test() do
-    IO.puts "testing.."
-    Enum.each(1..400, fn i -> Task.async(fn -> {:ok, _} = query("SELECT pg_sleep(0.05)") end) end)
+    IO.puts "Testing.."
+    1..@n
+    |> Enum.map(fn i -> Task.async(fn -> {:ok, _} = query("SELECT pg_sleep(#{@sleep})") end) end)
+    |> Enum.map(fn t -> Task.await(t) end)
   end
 
   def diagnose do
