@@ -25,8 +25,25 @@ Function: #Function<1.76782678/0 in TimeoutReproducer.App.test/0>
     Args: []
 ```
 
+You can verify that the workers are stuck by running `diagnose`:
+
 ```
-docker run --name db -e POSTGRES_USER=assetmap -e POSTGRES_PASSWORD=assetmap -e POSTGRES_DATABASE=assetmap -d --net=host postgres:10
-docker run --net=host -it coffei/timeout_reproducer
-iex> TimeoutReproducer.App.test
+iex(6)> TimeoutReproducer.App.diagnose
+----
+Worker #PID<0.569.0> is stuck:
+{:current_stacktrace,
+ [
+   {:prim_inet, :recv0, 3, []},
+   {Postgrex.Protocol, :msg_recv, 4,
+    [file: 'lib/postgrex/protocol.ex', line: 1985]},
+   {Postgrex.Protocol, :ping_recv, 4,
+    [file: 'lib/postgrex/protocol.ex', line: 1734]},
+   {DBConnection.Connection, :handle_info, 2,
+    [file: 'lib/db_connection/connection.ex', line: 373]},
+   {Connection, :handle_async, 3, [file: 'lib/connection.ex', line: 810]},
+   {:gen_server, :try_dispatch, 4, [file: 'gen_server.erl', line: 637]},
+   {:gen_server, :handle_msg, 6, [file: 'gen_server.erl', line: 711]},
+   {:proc_lib, :init_p_do_apply, 3, [file: 'proc_lib.erl', line: 249]}
+ ]}
+
 ```
