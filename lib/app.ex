@@ -1,7 +1,7 @@
 defmodule TimeoutReproducer.App do
   use Application
 
-  @timeout 5000
+  @timeout 500
 
   def start(_, _) do
     children = [
@@ -12,7 +12,7 @@ defmodule TimeoutReproducer.App do
           database: "arjan",
           timeout: @timeout,
           pool: DBConnection.Poolboy,
-          pool_size: 10,
+          pool_size: 50,
           name: TestPool
         ]}
     ]
@@ -27,18 +27,27 @@ defmodule TimeoutReproducer.App do
   end
 
   def test_loop do
-    Process.sleep 500
-    for _ <- 1..100 do
-      test()
-      Process.sleep 6000
-    end
+    test()
+    Process.sleep 2000
+    test_loop()
   end
 
   def test() do
     IO.puts "testing.."
-    Enum.each(1..40, fn i -> Task.async(fn ->
-{:ok, _} = query("SELECT pg_sleep(1)")
-IO.puts "Query #{i} OK"
-end) end)
+    Enum.each(1..400, fn i -> Task.async(fn -> {:ok, _} = query("SELECT pg_sleep(0.05)") end) end)
+  end
+
+  def diagnose do
+    stuck =
+      GenServer.call(Elixir.TestPool, :get_all_workers)
+      |> Enum.map(&elem(&1, 1))
+      |> Enum.filter(fn(pid) -> {_, len} = Process.info(pid, :message_queue_len); len > 0 end)
+
+    for pid <- stuck do
+      IO.puts "----"
+      IO.puts "Worker #{inspect pid} is stuck:"
+      IO.inspect Process.info(pid, :current_stacktrace)
+      IO.puts ""
+    end
   end
 end
