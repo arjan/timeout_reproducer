@@ -2,9 +2,12 @@
 
 Reproducer for https://github.com/elixir-ecto/db_connection/issues/127
 
-Start with `./run.sh`, which just starts the `timeout_reproducer` app.
+Install postgres; and make sure the database credentials in
+`lib/app.ex` are correct. Then start with `./run.sh`, which just
+starts the `timeout_reproducer` app.
 
 ```
+# cat ./run.sh
 iex -pa '_build/dev/lib/*/ebin' --app timeout_reproducer
 ```
 
