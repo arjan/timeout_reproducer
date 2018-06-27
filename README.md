@@ -2,10 +2,12 @@
 
 Reproducer for https://github.com/elixir-ecto/db_connection/issues/127
 
-Start with:
+Start with `./run.sh`, which just starts the `timeout_reproducer` app.
+
 ```
 iex -pa '_build/dev/lib/*/ebin' --app timeout_reproducer
 ```
+
 
 The following error should start to appear after a while:
 

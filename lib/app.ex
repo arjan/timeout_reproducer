@@ -12,7 +12,7 @@ defmodule TimeoutReproducer.App do
           hostname: "localhost",
           username: "postgres",
           password: "postgres",
-          database: "arjan",
+          database: "postgres",
           timeout: @timeout,
           pool: DBConnection.Poolboy,
           pool_size: @pool,
